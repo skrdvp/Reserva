@@ -1,0 +1,104 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://github.com/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="head-end">
+        <style type="text/css">
+            .ui-grid-row .ui-grid-col-2,
+            .ui-grid-row .ui-grid-col-10 {
+                padding: 0.5em 0;
+                margin-left: 10px;
+            }
+
+            .ui-orderlist .ui-orderlist-list {
+                height: auto;
+            }
+
+            .ui-orderlist .ui-grid-row .ui-grid-col-2,
+            .ui-orderlist .ui-grid-row .ui-grid-col-10 {
+                padding: 0;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="title">
+        Pesquisa Usuário
+    </ui:define>
+
+    <ui:define name="description">
+        Pesquise de acordo com os filtros
+    </ui:define>
+
+    <ui:define name="body">
+        <adm:breadcrumb title="Pesquisa Usuario"/>
+
+			<h:form>
+            	<div class="box box-primary">
+                	<div class="box-header with-border">
+                    	<p:commandButton action="cadastro-usuario?faces-redirect=true" ajax="false" icon="fa fa-plus"
+                         	            value="Novo" styleClass="btn-primary"/>
+                    	<p:spacer width="5"/>
+	                    <p:commandButton value="Excluir Selecionado(s)" icon="fa fa-trash" styleClass="btn-danger"
+	                    				 action="#{listaUsuarioMB.excluirSelecionados()}"
+	                                     process="@form" update="@form"/>
+	                    <p:spacer width="5"/>
+	                    <p:commandButton value="Olhar Selecionado(s)" 
+	                    				 oncomplete="PF('usuariosSelecionados').show()"
+	                    				 update="@(.ui-dialog)" 
+	                    				 styleClass="btn-info"
+	                                     icon="fa fa-search"/>
+	                    <p:separator/>
+	                    
+	                    
+	                    <p:dataTable id="usuarioTable" widgetVar="usuarioTable" rows="10"
+	                    			 value="#{listaUsuarioMB.usuarios}" var="usuario" rowKey="#{usuario.codigo}"
+	                    			 selection="#{listaUsuarioMB.usuariosSelecionados}"	                    			 
+	                                 paginator="true" 	                                 
+	                                 paginatorPosition="bottom"	                                 
+	                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
+	                                 currentPageReportTemplate=""
+	                                 rowsPerPageTemplate="5,10,15,20,30">	                                                                 
+	                        
+	
+	                        <p:column selectionMode="multiple" width="5%" styleClass="align-center"/>
+	                        <p:column headerText="CPF" sortBy="#{usuario.cpf}"> 
+	                        	<h:link value="#{usuario.cpf}" outcome="cadastro-usuario.xhtml">
+	                        	<f:param name="codigo" value="#{usuario.codigo}"/>
+	                        	</h:link>
+	                        </p:column>
+	                        <p:column headerText="Nome" sortBy="#{usuario.nome}"> 
+	                      		<h:outputLabel value="#{usuario.nome}"/>
+	                        </p:column>
+	                        <p:column headerText="E-mail" sortBy="#{usuario.email}"> 
+	                      		<h:outputLabel value="#{usuario.email}"/>
+	                        </p:column>
+	                        <p:column headerText="Telefone" sortBy="#{usuario.telefone}"> 
+	                      		<h:outputLabel value="#{usuario.telefone}"/>
+	                        </p:column>
+	                        <p:column headerText="Função" sortBy="#{usuario.funcao.descricao}"> 
+	                      		<h:outputLabel value="#{usuario.funcao.descricao}"/>
+	                        </p:column>
+	                        <p:column headerText="Cargo" sortBy="#{usuario.cargo}"> 
+	                      		<h:outputLabel value="#{usuario.cargo}"/>
+	                        </p:column>	                        
+	                    </p:dataTable>
+					</div>
+	            </div>
+        	</h:form>
+        	
+        	<p:dialog header="Usuario Selecionados" widgetVar="usuariosSelecionados" height="250"
+                  	  width="400" responsive="true" styleClass="box-success">
+	            <p:dataList id="listaUsuariosSelecionados" value="#{listaUsuarioMB.usuariosSelecionados}" var="usuario"
+	                        type="definition">
+							ID: #{usuario.cpf} - #{usuario.nome} - #{usuario.email} - #{usuario.telefone} - #{usuario.funcao.descricao} - #{usuario.cargo}
+	            </p:dataList>
+			</p:dialog>
+
+        
+    </ui:define>
+
+</ui:composition>
